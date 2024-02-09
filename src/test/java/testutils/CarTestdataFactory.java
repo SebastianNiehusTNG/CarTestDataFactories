@@ -8,6 +8,8 @@ import java.util.stream.IntStream;
 
 import org.cartdf.Car.CarBuilder;
 
+import testutils.CarModifier.CarListModifier;
+
 public final class CarTestdataFactory {
 
     private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
@@ -28,10 +30,12 @@ public final class CarTestdataFactory {
                 .cabinTemperatureInDegC(RANDOM.nextInt(50));
     }
 
-    public List<CarBuilder> createCarBuilderList(int count) {
+    public static CarListModifier createCarBuilderList(int count) {
 
-        return IntStream.range(0, count)
+        List<CarBuilder> builders = IntStream.range(0, count)
                 .mapToObj(i -> createCarBuilder())
                 .collect(toList());
+
+        return new CarListModifier(builders);
     }
 }

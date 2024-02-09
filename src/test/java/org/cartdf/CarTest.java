@@ -1,12 +1,16 @@
 package org.cartdf;
 
+import static java.util.stream.Collectors.toList;
 import static org.cartdf.TrafficJam.createTrafficJam;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static testutils.CarModifier.color;
+import static testutils.CarModifier.mileageInKm;
 import static testutils.CarTestdataFactory.createCarBuilder;
+import static testutils.CarTestdataFactory.createCarBuilderList;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
@@ -51,10 +55,14 @@ class CarTest {
 
         // Given
         final int numberOfCars = 100;
-        List<Car> cars = new ArrayList<>();
-        for (int i = 0; i < numberOfCars; i++) {
-            cars.add(createCarBuilder().build());
-        }
+        final String givenColor = "Pink";
+        final List<Integer> givenMileages = IntStream.range(0, numberOfCars).boxed()
+                .collect(toList()); // Creates a List of integers: [0, 1, 2 ... numberOfCars - 1]
+
+        List<Car> cars = createCarBuilderList(numberOfCars)
+                .withSameModificationForAll(color(givenColor))
+                .withIndividualModification(mileageInKm(givenMileages))
+                .build();
 
         // When
         TrafficJam resultingTrafficJam = createTrafficJam(cars);
